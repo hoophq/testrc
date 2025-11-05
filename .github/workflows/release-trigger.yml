@@ -1,4 +1,4 @@
-name: Release
+name: Release Merge Trigger
 
 on:
   push:
@@ -23,17 +23,17 @@ jobs:
       - name: Install semver
         run: npm install -g semver
 
-      - name: Bump Version
+      - name: Release Merge Trigger
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
-          LATEST_VERSION=$(gh release list --exclude-drafts -L 1 | awk {'print $1'})
+          LATEST_VERSION=$(gh release list --exclude-drafts -L 1 | awk {'print $3'})
           semver $LATEST_VERSION || (echo "latest release is not in valid semantic version format: ${LATEST_VERSION}" && exit 1)
           NEW_VERSION=""
           if [[ $LATEST_VERSION == *"-rc."* ]]; then
             NEW_VERSION=$(semver $LATEST_VERSION --preid rc -i prerelease)
           else
-            NEW_VERSION="$(semver 1.43.0 -i minor)-rc.0"
+            NEW_VERSION="$(semver $LATEST_VERSION -i minor)-rc.0"
           fi
 
           gh workflow run release.yml -f version=$NEW_VERSION
