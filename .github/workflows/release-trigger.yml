@@ -1,4 +1,4 @@
-name: Release
+name: Release Merge Trigger
 
 on:
   push:
@@ -45,7 +45,7 @@ jobs:
           if [[ $LATEST_VERSION == *"-rc."* ]]; then
             NEW_VERSION=$(semver $LATEST_VERSION --preid rc -i prerelease)
           else
-            NEW_VERSION="$(semver 1.43.0 -i minor)-rc.0"
+            NEW_VERSION="$(semver $LATEST_VERSION -i minor)-rc.0"
           fi
 
           gh workflow run release.yml -f version=$NEW_VERSION
