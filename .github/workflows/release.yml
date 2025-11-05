@@ -22,7 +22,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
           NOTE_FILE="$(mktemp).md"
-          GIT_COMMIT=$(git log $LATEST_TAG..HEAD --pretty=format:"%h %s%n%n%b")
+          LATEST_VERSION=$(gh release list --exclude-drafts -L 1 | awk {'print $3'})
+          GIT_COMMIT=$(git log ${LATEST_VERSION}..HEAD --pretty=format:"%h %s%n%n%b")
           cat - >$NOTE_FILE <<EOF
           # Changelog
 
