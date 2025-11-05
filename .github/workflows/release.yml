@@ -31,4 +31,4 @@ jobs:
           semver $LATEST_VERSION --preid rc -i prerelease || (echo "latest release is not in valid semantic version format: ${LATEST_VERSION}" && exit 1)
           NEW_VERSION=$(semver $LATEST_VERSION --preid rc -i prerelease)
           echo "CUR VERSION --> $LATEST_VERSION"
-          echo "NEW VERSION --> $NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "NEW VERSION --> $NEW_VERSION"
