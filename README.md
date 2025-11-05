@@ -1,3 +1,3 @@
 # testrc
 
-Hey ho
+Hey ho, lets go
