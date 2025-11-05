@@ -13,7 +13,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          token: ${{ secrets.GH_TOKEN }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -24,6 +23,8 @@ jobs:
         run: npm install -g semver
 
       - name: Get current version
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         id: current_version
         run: |
           LATEST_VERSION=$(gh release list --exclude-drafts -L 1 |awk {'print $1'})
