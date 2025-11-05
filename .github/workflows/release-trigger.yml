@@ -23,7 +23,19 @@ jobs:
       - name: Install semver
         run: npm install -g semver
 
-      - name: Bump Version
+      - name: Release Minor Version
+        if: github.ref == 'refs/heads/main' && startsWith(github.event.head_commit.message, '[release]:')
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          LATEST_VERSION=$(gh release list --exclude-drafts -L 1 | awk {'print $3'})
+          semver $LATEST_VERSION || (echo "latest release is not in valid semantic version format: ${LATEST_VERSION}" && exit 1)
+          MINOR_BUMP_VERSION=$(semver $LATEST_VERSION -i minor)
+          gh workflow run release.yml -f version=$MINOR_BUMP_VERSION
+          # gh run watch $RUN_ID --exit-status
+
+      - name: Release Candidate Version
+        if: github.ref == 'refs/heads/rc'
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
