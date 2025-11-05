@@ -36,8 +36,5 @@ jobs:
             NEW_VERSION="$(semver 1.43.0 -i minor)-rc.0"
           fi
 
-          gh workflow run release.yml -f version=$GIT_TAG --repo hoophq/testrc
-          gh run watch $RUN_ID --exit-status
-
-          echo "CUR VERSION --> $LATEST_VERSION"
-          echo "NEW VERSION --> $NEW_VERSION"
+          gh workflow run release.yml -f version=$NEW_VERSION
+          # gh run watch $RUN_ID --exit-status
