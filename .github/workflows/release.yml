@@ -28,7 +28,7 @@ jobs:
         id: current_version
         run: |
           LATEST_VERSION=$(gh release list --exclude-drafts -L 1 | awk {'print $1'})
-          semver $LATEST_VERSION --preid rc -i prerelease || echo "is not semver (${LATEST_VERSION}), exiting"; exit 1
+          semver $LATEST_VERSION --preid rc -i prerelease || echo "release is not a valid semantic version: ${LATEST_VERSION}"; exit 1
           NEW_VERSION=$(semver $LATEST_VERSION --preid rc -i prerelease)
           echo "CUR VERSION --> $LATEST_VERSION"
           echo "NEW VERSION --> $NEW_VERSION" >> $GITHUB_OUTPUT
