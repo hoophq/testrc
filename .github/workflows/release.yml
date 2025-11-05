@@ -1,0 +1,32 @@
+name: Version Bump and Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  bump-version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install semver
+        run: npm install -g semver
+
+      - name: Get current version
+        id: current_version
+        run: |
+          LATEST_VERSION=$(gh release list --exclude-drafts -L 1 |awk {'print $1'})
+          NEW_VERSION=$(semver $LATEST_VERSION --preid rc -i prerelease)
+          echo "CUR VERSION --> $LATEST_VERSION"
+          echo "NEW VERSION --> $NEW_VERSION" >> $GITHUB_OUTPUT
