@@ -1,0 +1,35 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'The semantic version to use to generate a new release'
+        required: true
+        type: string
+
+jobs:
+  bump-version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Release Version
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          NOTE_FILE="$(mktemp).md"
+          GIT_COMMIT=$(git log $LATEST_TAG..HEAD --pretty=format:"%h %s%n%n%b")
+          cat - >$NOTE_FILE <<EOF
+          # Changelog
+
+          This is the changelog for version $GIT_TAG for project hoophq/testrc
+
+          $GIT_COMMIT
+          EOF
+
+          gh release create ${{inputs.version}} -F $NOTE_FILE --title ${{inputs.version}}
+
