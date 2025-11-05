@@ -5,6 +5,13 @@ on:
     branches:
       - rc
       - main
+    paths-ignore:
+      - '*.md'
+      - 'webapp/*.md'
+      - '*.png'
+      - '.github/**'
+      - 'LICENSE'
+      - '.env.sample'
 
 jobs:
   bump-version:
