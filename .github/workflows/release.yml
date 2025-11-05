@@ -1,9 +1,12 @@
-name: Version Bump and Release
+name: Release
 
 on:
-  push:
-    branches:
-      - feat/release-workflow
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'The semantic version to use to generate a new release'
+        required: true
+        type: string
 
 jobs:
   bump-version:
@@ -14,21 +17,19 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Install semver
-        run: npm install -g semver
-
-      - name: Get current version
+      - name: Release Version
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-        id: current_version
         run: |
-          LATEST_VERSION=$(gh release list --exclude-drafts -L 1 | awk {'print $1'})
-          semver $LATEST_VERSION --preid rc -i prerelease || (echo "latest release is not in valid semantic version format: ${LATEST_VERSION}" && exit 1)
-          NEW_VERSION=$(semver $LATEST_VERSION --preid rc -i prerelease)
-          echo "CUR VERSION --> $LATEST_VERSION"
-          echo "NEW VERSION --> $NEW_VERSION"
+          NOTE_FILE="$(mktemp).md"
+          GIT_COMMIT=$(git log $LATEST_TAG..HEAD --pretty=format:"%h %s%n%n%b")
+          cat - >$NOTE_FILE <<EOF
+          # Changelog
+
+          This is the changelog for version $GIT_TAG for project hoophq/testrc
+
+          $GIT_COMMIT
+          EOF
+
+          gh release create ${{inputs.version}} -F $NOTE_FILE --title ${{inputs.version}}
+
