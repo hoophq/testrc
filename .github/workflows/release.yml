@@ -3,7 +3,7 @@ name: Version Bump and Release
 on:
   push:
     branches:
-      - main
+      - feat/release-workflow
 
 jobs:
   bump-version:
