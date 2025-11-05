@@ -14,7 +14,7 @@ on:
       - '.env.sample'
 
 jobs:
-  bump-version:
+  release-workflow-trigger:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
