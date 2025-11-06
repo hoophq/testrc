@@ -11,6 +11,11 @@ on:
         description: 'The branch to release from'
         required: true
         type: string
+      prerelease:
+        description: 'Is this a prerelease?'
+        required: false
+        type: boolean
+        default: false
 
 jobs:
   release-version:
@@ -37,5 +42,5 @@ jobs:
           $GIT_COMMIT
           EOF
 
-          gh release create ${{inputs.version}} -F $NOTE_FILE --title ${{inputs.version}}
+          gh release create ${{inputs.version}} -F $NOTE_FILE --title ${{inputs.version}} --prerelease=${{inputs.prerelease}}
 
