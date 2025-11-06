@@ -13,7 +13,7 @@ on:
         default: main
         type: string
       prerelease:
-        description: 'Is this a prerelease?'
+        description: 'Is this a pre release?'
         required: false
         type: boolean
         default: false
@@ -32,16 +32,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
-          NOTE_FILE="$(mktemp).md"
-          LATEST_VERSION=$(gh release list --exclude-drafts -L 1 | awk {'print $3'})
-          GIT_COMMIT=$(git log ${LATEST_VERSION}..HEAD --pretty=format:"%h %s (%an)")
-          cat - >$NOTE_FILE <<EOF
-          # Changelog
-
-          This is the changelog for version $GIT_TAG for project hoophq/testrc
-
-          $GIT_COMMIT
-          EOF
-
-          gh release create ${{inputs.version}} -F $NOTE_FILE --title ${{inputs.version}} --prerelease=${{inputs.prerelease}}
+          VERSION=${{ inputs.version }} PRE_RELEASE=${{ inputs.prerelease }} ./scripts/publish-release.sh
 
