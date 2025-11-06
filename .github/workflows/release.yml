@@ -18,6 +18,9 @@ on:
         type: boolean
         default: false
 
+run-name: |-
+  Release version ${{ inputs.version }} from branch '${{ inputs.branch }}' ${{ inputs.prerelease && '(Pre-release)' || '(Production Release)' }}
+
 jobs:
   release-version:
     runs-on: ubuntu-latest
