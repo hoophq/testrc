@@ -13,6 +13,9 @@ on:
       - 'LICENSE'
       - '.env.sample'
 
+run-name: |-
+  Release Merge Trigger ${{ github.ref == 'refs/heads/rc' && '(rc)' || '(main)' }}
+
 jobs:
   release-workflow-trigger:
     runs-on: ubuntu-latest
