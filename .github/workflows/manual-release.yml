@@ -1,4 +1,4 @@
-name: Release
+name: Manual Release
 
 on:
   workflow_dispatch:
@@ -22,7 +22,7 @@ run-name: |-
   Release version ${{ inputs.version }} from branch '${{ inputs.branch }}' ${{ inputs.prerelease && '(Pre-release)' || '(Production Release)' }}
 
 jobs:
-  release-version:
+  publish-release:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -31,7 +31,7 @@ jobs:
           ref: ${{ inputs.branch }}
           fetch-depth: 0
 
-      - name: Release Version
+      - name: Publish Release
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
