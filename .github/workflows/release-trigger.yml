@@ -38,7 +38,7 @@ jobs:
           LATEST_VERSION=$(gh release list --exclude-drafts -L 1 | awk {'print $3'})
           semver $LATEST_VERSION || (echo "latest release is not in valid semantic version format: ${LATEST_VERSION}" && exit 1)
           MINOR_BUMP_VERSION=$(semver $LATEST_VERSION -i minor)
-          gh workflow run release.yml -f version=$MINOR_BUMP_VERSION
+          gh workflow run release.yml -f version=$MINOR_BUMP_VERSION -f branch=main
           # gh run watch $RUN_ID --exit-status
 
       - name: Release Candidate Version
@@ -55,5 +55,5 @@ jobs:
             NEW_VERSION="$(semver $LATEST_VERSION -i minor)-rc.0"
           fi
 
-          gh workflow run release.yml -f version=$NEW_VERSION
+          gh workflow run release.yml -f version=$NEW_VERSION -f branch=rc
           # gh run watch $RUN_ID --exit-status
