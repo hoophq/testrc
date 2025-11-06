@@ -9,7 +9,8 @@ on:
         type: string
       branch:
         description: 'The branch to release from'
-        required: true
+        required: false
+        default: main
         type: string
       prerelease:
         description: 'Is this a prerelease?'
