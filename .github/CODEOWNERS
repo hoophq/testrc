@@ -1,1 +1,2 @@
-@hoophq/release-managers
+# Require specific team approval for changes to main
+* @hoophq/release-managers
