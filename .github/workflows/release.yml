@@ -19,14 +19,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
+          ref: ${{ inputs.branch }}
           fetch-depth: 0
 
       - name: Release Version
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
-          git fetch origin ${{inputs.branch}}
-          git checkout ${{inputs.branch}}
           NOTE_FILE="$(mktemp).md"
           LATEST_VERSION=$(gh release list --exclude-drafts -L 1 | awk {'print $3'})
           GIT_COMMIT=$(git log ${LATEST_VERSION}..HEAD --pretty=format:"%h %s (%an)")
