@@ -23,7 +23,7 @@ jobs:
         run: |
           NOTE_FILE="$(mktemp).md"
           LATEST_VERSION=$(gh release list --exclude-drafts -L 1 | awk {'print $3'})
-          GIT_COMMIT=$(git log ${LATEST_VERSION}..HEAD --pretty=format:"%h %s%n%n%b")
+          GIT_COMMIT=$(git log ${LATEST_VERSION}..HEAD --pretty=format:"%h %s (%an)")
           cat - >$NOTE_FILE <<EOF
           # Changelog
 
