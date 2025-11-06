@@ -24,6 +24,6 @@ jobs:
 
       - name: Reset RC branch to Main
         run: |
-          git push origin --delete rc
-          git checkout -b rc main
-          git push origin rc
+          git checkout rc
+          git reset --hard main
+          git push origin rc --force
