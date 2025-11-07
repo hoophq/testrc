@@ -22,7 +22,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
-          gh auth status
+          gh api user --jq '.login'
           git fetch origin rc:rc
           git checkout rc
           git reset --hard main
