@@ -22,8 +22,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
-          gh api user --jq '.login'
+          gh auth status
           git fetch origin rc:rc
           git checkout rc
           git reset --hard main
-          git push origin rc --force
+          gh repo set-default ${{ github.repository }}
+          git push https://sandromello:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git rc --force
+
