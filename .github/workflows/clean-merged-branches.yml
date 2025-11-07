@@ -1,0 +1,37 @@
+name: Clean Merged Branches
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - rc
+
+jobs:
+  cleanup:
+    # Only run if the PR was actually merged (not just closed)
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Delete merged branch
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Get the branch name that was merged
+          BRANCH_NAME="${{ github.event.pull_request.head.ref }}"
+
+          echo "Pull request #${{ github.event.pull_request.number }} was merged"
+          echo "Attempting to delete branch: $BRANCH_NAME"
+
+          # Delete the branch remotely
+          git push origin --delete "$BRANCH_NAME" || echo "Branch already deleted or unable to delete"
+
+      - name: Summary
+        run: |
+          echo "✅ Cleanup completed for branch: ${{ github.event.pull_request.head.ref }}"
+          echo "Merged into: ${{ github.event.pull_request.base.ref }}"
