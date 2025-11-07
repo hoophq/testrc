@@ -1,4 +1,4 @@
-name: Sync Main with Main
+name: Sync Main with RC
 
 on:
   pull_request:
@@ -17,13 +17,29 @@ jobs:
         with:
           fetch-depth: 0
           ref: main
+          # Don't use the default GITHUB_TOKEN for checkout
+          persist-credentials: false
+
+      - name: Setup SSH Deploy Key
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.DEPLOY_KEY }}
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Reset RC branch to Main
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
-          gh api user --jq '.login'
+          # Fetch the rc branch
           git fetch origin rc:rc
+
+          # Checkout rc branch
           git checkout rc
+
+          # Reset rc to match main
           git reset --hard main
+
+          # Force push to rc branch using SSH
           git push origin rc --force
