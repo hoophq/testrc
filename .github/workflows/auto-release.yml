@@ -45,7 +45,7 @@ jobs:
           # gh run watch $RUN_ID --exit-status
 
       - name: Release Candidate Version
-        if: github.ref == 'refs/heads/rc'
+        if: github.ref == 'refs/heads/rc' && github.event.forced == false
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
