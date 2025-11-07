@@ -22,12 +22,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
-          set -x
-          gh auth status
-          git fetch origin
-          git checkout main
-          git branch -D rc 2>/dev/null || true
-          git checkout -b rc
-          git push origin --delete rc || true
-          git push origin rc
-
+          gh api user --jq '.login'
+          git fetch origin rc:rc
+          git checkout rc
+          git reset --hard main
+          git push origin rc --force
