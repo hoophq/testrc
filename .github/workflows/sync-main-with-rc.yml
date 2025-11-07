@@ -1,0 +1,26 @@
+name: Sync Main with Main
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+
+jobs:
+  sync-rc:
+    # Only run if PR was merged and came from rc branch
+    if: github.event.pull_request.merged == true && github.event.pull_request.head.ref == 'rc'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Reset RC branch to Main
+        run: |
+          gh auth status
+          git checkout rc
+          git reset --hard main
+          git push origin rc --force
