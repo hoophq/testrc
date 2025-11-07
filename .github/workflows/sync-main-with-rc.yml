@@ -9,18 +9,21 @@ on:
 jobs:
   sync-rc:
     # Only run if PR was merged and came from rc branch
-    if: github.event.pull_request.merged == true && github.event.pull_request.head.ref == 'rc'
+    # if: github.event.pull_request.merged == true && github.event.pull_request.head.ref == 'rc'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          token: ${{ secrets.GH_TOKEN }}
+          ref: main
 
       - name: Reset RC branch to Main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
           gh auth status
+          git fetch origin rc:rc
           git checkout rc
           git reset --hard main
           git push origin rc --force
